@@ -1,0 +1,114 @@
+---
+title: "Homework 2: Health Economics"
+author: "Nikhita Gandhe"
+date: "02/18/2025"
+format: pdf
+---
+
+# Please Find my GitHub Repository Link Here: 
+https://github.com/nsgand2/ECON-470-HW2.git  
+
+```{r setup, include=FALSE}
+# loading libraries
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, ggplot2, dplyr, lubridate, stringr, readxl, data.table, gdata)
+library(readr)     # For reading data
+library(knitr)
+library(tidyr)
+library(MatchIt)    
+library(WeightIt)   
+library(sandwich)   
+library(lmtest)     
+library(Matching)   
+  
+load("C:/Users/Nikhita Gandhe/Documents/GitHub/ECON-470-HW2/submission3/hw_workspace.Rdata")
+```
+
+# Question 1: Number of Hospitals Filing Multiple Reports
+How many hospitals filed more than one report in the same year? Show your answer as a line graph of the number of hospitals over time.
+```{r}
+#| echo: FALSE
+  
+  # graphing
+  ggplot(data = total_report_count, aes(x=year, y=total)) +
+    geom_line()
+  
+```
+
+# Question 2: Unique Hospital IDs
+After removing/combining multiple reports, how many unique hospital IDs (Medicare provider numbers) exist in the data?
+
+```{r}
+#| echo: false
+
+tibble(unique_hospital_ids = nrow(unique_provider_nos))
+
+```
+
+
+# Question 3: Distribution of Total Charges by Year
+What is the distribution of total charges in each year? Show your results with a violin plot.
+
+```{r}
+#| echo: FALSE
+
+print(violin_plot)
+
+```
+
+
+# Question 4: Distribution of Estimated Prices by Year
+What is the distribution of estimated prices in each year? Show your results with a violin plot.
+
+```{r}
+#| echo: FALSE
+ggplot(hcris_filtered, aes(x = year, y = price)) +
+  geom_violin(fill = "red", alpha = 0.5, adjust = 1.5) +  # Smooth density estimation
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.3) +  # Boxplot for additional clarity
+  scale_y_continuous(trans = "log10") +  # Log scale to handle skewed data
+  theme_minimal() +
+  labs(title = "Distribution of Estimated Prices by Year",
+       x = "Year",
+       y = "Estimated Price (log scale)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate labels for readability
+
+```
+
+# Question 5: Average Price for Penalized vs. Non-Penalized Hospitals
+Calculate the average price among penalized versus non-penalized hospitals.
+
+```{r}
+#| echo: FALSE
+
+print("Average Price by Penalty Status (2012):")
+print(average_prices)
+
+```
+
+
+# Question 6 Split hospitals into quartiles based on bed size.
+Provide a table of the average price among treated/control groups for each quartile.
+```{r}
+#| echo: FALSE
+
+kable(average_prices_by_quartile, caption = "Average Price by Penalty Status Across Bed Size Quartiles")
+
+
+```
+
+# Question 7 Find the average treatment effect using each of the following estimators, and present your results in a single table:
+
+```{r}
+#| echo: FALSE
+kable(results, caption = "Estimated Treatment Effects by Method")
+
+```
+
+# Question 8 With these different treatment effect estimators, are the results similar, identical, very different?
+The results are very different between the different treatment effect estimators.
+
+# Question 9 Do you think you’ve estimated a causal effect of the penalty? Why or why not? (just a couple of sentences)
+Due to a high variance in between the estimates, I was unable to estimate a causal effect for the penalty.
+
+# Question 10 Briefly describe your experience working with these data (just a few sentences). Tell me one thing you learned and one thing that really aggravated or surprised you.
+I learned that I can easily work on a r file in VS Code and then move everything to a qmd file if I just load it using this line of code which I run in the r file and in the beginning of the qmd file, load("C:/Users/Nikhita Gandhe/Documents/GitHub/ECON-470-HW2/submission3/hw_workspace.Rdata"). One thing that really aggravated me was that despite using the same code as other classmates, the estimates we obtained had a very high variance. 
